@@ -1,4 +1,4 @@
-type airclass = A | B | C | CTR | D | E | GP | P | Q | R | W [@@deriving enum, show]
+type airclass = A | B | C | CTR | D | E | GP | P | Q | R | W [@@deriving enum, show  { with_path = false }]
 
 let opt_apply f = function
   | Some v -> Some (f v)
@@ -6,7 +6,7 @@ let opt_apply f = function
 
 let airclass_of_string =
   let strs = Array.init
-               (max_airclass - min_airclass + 1)
+      (max_airclass - min_airclass + 1)
       (fun i -> airclass_of_enum i
                 |> opt_apply show_airclass)
              |> Array.to_list in
@@ -55,6 +55,7 @@ and alt =
   | Altitude of int                     (* par rapport à la mer, en m *)
   | FlightLevel of int                  (* Flight Level en 100 pieds *)
   | Unlimited
+[@@deriving show]
 
 and geom =
   | Circle of circle
@@ -94,6 +95,8 @@ let default_zone = {
   gm = None;
 }
 
+let pp_coord = Gps.pp
+
 type line =
 | Void
 | AirClass of airclass
@@ -109,35 +112,43 @@ type line =
 | SetCenter of coord
 | SetDir of bool
 | SetLabel of coord
+[@@deriving show]
 
-let pp_ac formatter z =
-  Format.fprintf formatter "AC %a\n" pp_airclass z.ac
+(* let pp_ac formatter ac =
+ *   Format.fprintf formatter "AC %a\n" pp_airclass ac
+ *
+ * let pp_an formatter z =
+ *   Format.fprintf formatter "AN %s\n" z.nm
+ *
+ * let show_alt = function
 
-let pp_an formatter z =
-  Format.fprintf formatter "AN %s\n" z.nm
-
-let show_alt = function
-  | Hauteur 0 -> "SFC"
-  | Hauteur a -> Printf.sprintf "%d M AGL" a
-  | Altitude a -> Printf.sprintf "%d M AMSL" a
-  | FlightLevel a -> Printf.sprintf "FL%d" (a / 30)
-  | Unlimited -> "UNL"
-
-let pp_alt fmt alt =
-  Format.fprintf fmt "%s" (show_alt alt)
-
-let pp_al formatter z =
-  List.iter (fun alt ->
-      Format.fprintf formatter "AL ";
-      pp_alt formatter alt;
-      Format.fprintf formatter "\n") z.al
-
-let pp_ah formatter z =
-  List.iter (fun z ->
-      Format.fprintf formatter "AH ";
-      pp_alt formatter z;
-      Format.fprintf formatter "\n") z.ah
-
-let pp formatter z =
-  Format.fprintf formatter "%a%a%a%a"
-    pp_ac z pp_an z pp_al z pp_ah z
+ *   | Hauteur 0 -> "SFC"
+ *   | Hauteur a -> Format.sprintf "%d M AGL" a
+ *   | Altitude a -> Format.sprintf "%d M AMSL" a
+ *   | FlightLevel a -> Format.sprintf "FL%d" (a / 30)
+ *   | Unlimited -> "UNL"
+ *
+ * let pp_alt fmt alt =
+ *   Format.fprintf fmt "%s" (show_alt alt)
+ *
+ * let pp_al formatter z =
+ *   List.iter (fun alt ->
+ *       Format.fprintf formatter "AL ";
+ *       pp_alt formatter alt;
+ *       Format.fprintf formatter "\n") z.al
+ *
+ * let pp_ah formatter z =
+ *   List.iter (fun z ->
+ *       Format.fprintf formatter "AH ";
+ *       pp_alt formatter z;
+ *       Format.fprintf formatter "\n") z.ah
+ *
+ * let pp formatter z =
+ *   Format.fprintf formatter "%a%a%a%a"
+ *     pp_ac z pp_an z pp_al z pp_ah z
+ *
+ * let string_of_line = function
+ *   | Void -> ""
+ *   | AirClass ac -> show_airclass ac
+ *   |
+ *   | _ -> assert false *)

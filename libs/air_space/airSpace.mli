@@ -98,6 +98,8 @@ and sens =
   | Clockwise
   | Counterclockwise
 
+val pp: Format.formatter -> t -> unit
+
 val brush_style_of_rgb: rgb -> brush_style
 
 (* Une zone par défaut, non nommée *)
@@ -120,4 +122,4 @@ type line =
 | SetDir of bool
 | SetLabel of coord
 
-val pp: Format.formatter -> zone -> unit
+val pp_line: Format.formatter -> line -> unit

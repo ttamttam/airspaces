@@ -1,6 +1,6 @@
 (jbuild_version 1)
 
-(library(
+(executable(
   (name tests)
-  (libraries (gps_coordinates contour_france air_space netclient nettls-gnutls lambdasoup webr re.str))
+  (libraries (air_space batteries))
 ))

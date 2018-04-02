@@ -10,14 +10,17 @@ let truncate' p = p |> arrondi |> truncate
 let ff = 3_600_000.
 let f = truncate ff
 
-type t = int * int
 (* Latitude et longitude stockés en deg × f *)
+type t = int * int
 
 let latitude = fst
 let longitude = snd
 
 let deg_of_bin x = float x /. ff
-let rad_of_deg deg = deg *. atan2 1. 1. /. 45.
+
+let rad_of_deg, deg_of_rad =
+  let factor = 45. /. atan2 1. 1. in
+  ((fun deg -> deg /. factor), (fun rad -> rad *. factor))
 
 let dec n x =
   let f = 10. ** float n in
@@ -31,6 +34,12 @@ let latitude_rad c = c |> latitude_deg |> rad_of_deg
 let longitude_rad c = c |> longitude_deg |> rad_of_deg
 
 let of_deg ~lat ~lon = (lat *. ff |> truncate', lon *. ff |> truncate')
+
+let of_xyz (x,y,z) =
+  let r = 6_378_137.0 in
+  let lat = acos (z /. r) |> deg_of_rad in
+  let lon = atan2 y x |> deg_of_rad in
+  of_deg ~lat ~lon
 
 let bin_of_dms (d,m,s) = d * f + m * 60_000 + (s *. 1000. |> truncate')
 
@@ -49,6 +58,12 @@ let to_dms c = latitude c |> dms_of_bin, longitude c |> dms_of_bin
 let to_deg c = latitude_deg c, longitude_deg c
 let to_rad c = latitude_rad c, longitude_rad c
 
+let to_xyz coordinates =
+  let r = 6_378_137.0 in(* demi-axe WGS-84 *)
+  let (lat, lon) = to_rad coordinates in
+  let sla = sin lat and cla = cos lat
+  and slo = sin lon and clo = cos lon in
+  (r *. sla *. clo, r *. sla *. slo, r *. cla)
 
 (* let distance x1 x2 = *)
 (*   let rla1 = latitude_rad x1 *)
@@ -89,7 +104,6 @@ https://en.wikipedia.org/wiki/Vincenty%27s_formulae
 -> http://www.movable-type.co.uk/scripts/latlong-vincenty.html
 -> https://github.com/mrJean1/PyGeodesy
  *)
-
 
 (* Distance de vincenty *)
 let distance x1 x2 =
@@ -228,3 +242,11 @@ let to_dms_string2 c =
                  (if latitude_deg c < 0. then 'S' else 'N')
                  (abs lod) (abs lom) (abs_float los |> truncate)
                  (if longitude_deg c < 0. then 'W' else 'E')
+
+let pp fmt c =
+  let ((lad, lam, las), (lod, lom, los)) = to_dms c in
+  Format.fprintf fmt "%02u°%02u'%02u\"%c, %03u°%02u'%02u\"%c"
+    (abs lad) (abs lam) (abs_float las |> truncate)
+    (if latitude_deg c < 0. then 'S' else 'N')
+    (abs lod) (abs lom) (abs_float los |> truncate)
+    (if longitude_deg c < 0. then 'W' else 'E')
