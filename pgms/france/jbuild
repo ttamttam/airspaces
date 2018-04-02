@@ -1,0 +1,12 @@
+(jbuild_version 1)
+
+(executables
+ ((names     (france))
+  (libraries (threads webr netclient))))
+
+(rule(
+      (targets (cache_way_list_and_northest_node))
+      (deps    (france.exe))
+      (action  (run ${<}))
+      (fallback)
+      ))

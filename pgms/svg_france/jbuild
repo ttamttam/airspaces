@@ -1,0 +1,11 @@
+(jbuild_version 1)
+
+(executables
+ ((names        (svg_france))
+  (libraries (benchmark polyline_simplification contour_france vg.svg))))
+
+(rule (
+       (targets (france.svg))
+       (deps (svg_france.exe))
+       (action (run ${<}))
+       ))

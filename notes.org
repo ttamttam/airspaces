@@ -1,0 +1,25 @@
+* Libraries pour parser HTML
+
+- https://github.com/mirage/ocaml-cow : je ne suis pas certain que ce
+  soit la plus appropriée pour ce que je veux faire
+
+- https://github.com/aantron/lambda-soup : ça à l’air de beaucoup
+  mieux correspondre. Une fois le document parsé, on peut faire des
+  requêtes à la CSS.
+* Tests
+
+  Dans libs, il y a une librairie qui dépend des autres librairies.
+  Il suffit de faire ~jbuilder utop libs/tests~ pour lancer utop.
+
+
+  Remarque : On peut lui rajouter  test2.ml, qui parse
+  ffvv-airspaces/AIRSPACE_France.txt en le copiant dans le bon répertoire
+
+  J’ai aussi ajouté le nécessaire dans libs/tests/jbuild pour pouvoir
+  développer eaip.ml directement avec utop :
+
+jbuilder utop libs/tests -- -emacs
+
+au lieu de
+
+opam config exec -- utop -emacs

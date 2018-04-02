@@ -1,0 +1,12 @@
+Eventually, this project will become a tool to generate [[http://www.winpilot.com/Default.aspx][WinPilot]] [[http://www.winpilot.com/UsersGuide/UserAirspace.asp][OpenAir™]]
+automatically from the french [[https://www.sia.aviation-civile.gouv.fr/][SIA]] (Service de l’Information Aéronautique).
+
+More precisely, I'll work with the eAIP published by the SIA. eAIP is the
+EUROCONTROL Specification for the electronic Aeronautical Information
+Publication: it covers the Aeronautical Information Publications (AIPs), AIP
+Amendments (AMDTs), AIP Supplements (SUPs) and Aeronautical Information
+Circulars (AICs).
+
+Since this specification is shared by European countries, the tool will
+certainly be usable to generate OpenAir files from other countries as well
+(with small adaptation, surely).

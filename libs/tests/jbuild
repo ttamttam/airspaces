@@ -1,0 +1,6 @@
+(jbuild_version 1)
+
+(library(
+  (name tests)
+  (libraries (gps_coordinates contour_france air_space netclient nettls-gnutls lambdasoup webr re.str))
+))

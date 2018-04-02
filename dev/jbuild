@@ -1,0 +1,6 @@
+(jbuild_version 1)
+
+(library (
+  (name      dev  )
+  (libraries (lambdasoup webr netclient nettls-gnutls air_space gps_coordinates re.str))
+))

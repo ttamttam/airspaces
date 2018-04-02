@@ -1,0 +1,15 @@
+(jbuild_version 1)
+
+(library(
+  (name air_space)
+  (libraries (gps_coordinates))
+  (preprocess (pps (ppx_deriving.enum ppx_deriving.show)))
+
+))
+
+
+(menhir(
+  (modules (pars_as_line))
+))
+
+(ocamllex (lex_as))

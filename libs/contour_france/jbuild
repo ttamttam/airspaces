@@ -1,0 +1,20 @@
+(jbuild_version 1)
+
+(library
+ ((name       contour_france)
+  (synopsis "Contours de la France métropolitaine (données Openstreetmap)")
+  ))
+
+(rule(
+      (targets (cache_way_list_and_northest_node))
+      (action (copy ../../pgms/france/cache_way_list_and_northest_node cache_way_list_and_northest_node))
+      (fallback)
+      ))
+
+(rule (
+       (targets (contour_france.ml))
+       (deps (../../pgms/france/france.exe
+              cache_way_list_and_northest_node))
+       (action (run ${<}))
+       (fallback)
+       ))
